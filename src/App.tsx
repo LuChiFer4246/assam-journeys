@@ -4,6 +4,19 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Places from "./pages/Places";
+import PlaceDetail from "./pages/PlaceDetail";
+import Culture from "./pages/Culture";
+import History from "./pages/History";
+import Festivals from "./pages/Festivals";
+import Stay from "./pages/Stay";
+import Travel from "./pages/Travel";
+import MapView from "./pages/MapView";
+import Reviews from "./pages/Reviews";
+import Contact from "./pages/Contact";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Research from "./pages/Research";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -16,7 +29,19 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/places" element={<Places />} />
+          <Route path="/places/:id" element={<PlaceDetail />} />
+          <Route path="/culture" element={<Culture />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/festivals" element={<Festivals />} />
+          <Route path="/stay" element={<Stay />} />
+          <Route path="/travel" element={<Travel />} />
+          <Route path="/map" element={<MapView />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/research" element={<Research />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
