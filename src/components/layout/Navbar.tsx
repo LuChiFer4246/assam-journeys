@@ -11,7 +11,7 @@ const navLinks = [
   { name: "Culture", path: "/culture" },
   { name: "Stays", path: "/stay" },
   { name: "Travel", path: "/travel" },
-  { name: "Reviews", path: "/reviews" },
+  { name: "Gallery", path: "/gallery" },
   { name: "Research", path: "/research" },
 ];
 

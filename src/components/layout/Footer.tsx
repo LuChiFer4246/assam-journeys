@@ -1,5 +1,8 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Compass, Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { Compass, Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, ArrowRight, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const quickLinks = [
   { name: "Places to Visit", path: "/places" },
@@ -14,7 +17,7 @@ const exploreLinks = [
   { name: "Hotels & Stays", path: "/stay" },
   { name: "Research", path: "/research" },
   { name: "Map View", path: "/map" },
-  { name: "Reviews", path: "/reviews" },
+  { name: "Photo Gallery", path: "/gallery" },
 ];
 
 const socialLinks = [
@@ -25,8 +28,58 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribed(true);
+      setEmail("");
+    }
+  };
+
   return (
     <footer className="bg-primary text-primary-foreground">
+      {/* Newsletter Section */}
+      <div className="border-b border-primary-foreground/10">
+        <div className="container-custom py-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left">
+              <h3 className="font-display text-2xl font-semibold">Subscribe to Our Newsletter</h3>
+              <p className="text-primary-foreground/70 mt-1">Get travel tips, festival updates & exclusive offers</p>
+            </div>
+            <form onSubmit={handleSubscribe} className="flex gap-3 w-full md:w-auto">
+              {subscribed ? (
+                <div className="flex items-center gap-2 px-4 py-2 bg-tea-green/20 rounded-xl">
+                  <Check className="w-5 h-5 text-tea-green" />
+                  <span className="text-sm font-medium">Thanks for subscribing!</span>
+                </div>
+              ) : (
+                <>
+                  <div className="relative flex-1 md:w-72">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-10 bg-white border-0"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" variant="gold">
+                    Subscribe
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </>
+              )}
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer */}
       <div className="container-custom py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
@@ -50,7 +103,7 @@ export function Footer() {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+                  className="w-9 h-9 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 hover:scale-110 transition-all"
                 >
                   <social.icon className="w-4 h-4" />
                 </a>
@@ -66,7 +119,7 @@ export function Footer() {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-colors"
+                    className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-colors hover:translate-x-1 inline-block"
                   >
                     {link.name}
                   </Link>
@@ -80,10 +133,10 @@ export function Footer() {
             <h4 className="font-display text-lg font-semibold mb-4">Explore</h4>
             <ul className="space-y-2">
               {exploreLinks.map((link) => (
-                <li key={link.path}>
+                <li key={link.name}>
                   <Link
                     to={link.path}
-                    className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-colors"
+                    className="text-primary-foreground/70 hover:text-primary-foreground text-sm transition-colors hover:translate-x-1 inline-block"
                   >
                     {link.name}
                   </Link>
