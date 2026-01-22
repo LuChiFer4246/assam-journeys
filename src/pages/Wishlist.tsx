@@ -1,20 +1,92 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Trash2, MapPin, Star, Calendar, ArrowRight } from "lucide-react";
+import { Heart, Trash2, MapPin, Star, Calendar, ArrowRight, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWishlist } from "@/hooks/useWishlist";
 import { places } from "@/data/mockData";
 
-// Mock wishlist - in real app this would come from state/backend
-const initialWishlist = places.slice(0, 4);
-
 const Wishlist = () => {
-  const [wishlistItems, setWishlistItems] = useState(initialWishlist);
+  const { user, loading: authLoading } = useAuth();
+  const { items, loading, removeFromWishlist } = useWishlist();
 
-  const removeFromWishlist = (id: string) => {
-    setWishlistItems(wishlistItems.filter((item) => item.id !== id));
-  };
+  // Get full place data for each wishlist item
+  const wishlistPlaces = items.map((item) => {
+    const placeData = places.find((p) => p.id === item.place_id);
+    return {
+      ...item,
+      ...placeData,
+      name: item.place_name,
+      image: item.place_image || placeData?.image || "/placeholder.svg",
+      category: item.place_category || placeData?.category,
+    };
+  });
+
+  if (authLoading || loading) {
+    return (
+      <Layout>
+        <section className="bg-primary py-16 md:py-24">
+          <div className="container-custom">
+            <div className="max-w-2xl">
+              <span className="text-gold font-medium text-sm uppercase tracking-wider">Your Collection</span>
+              <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mt-2">
+                Saved Places
+              </h1>
+            </div>
+          </div>
+        </section>
+        <section className="section-padding bg-cream min-h-[50vh] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </section>
+      </Layout>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Layout>
+        <section className="bg-primary py-16 md:py-24">
+          <div className="container-custom">
+            <div className="max-w-2xl">
+              <span className="text-gold font-medium text-sm uppercase tracking-wider">Your Collection</span>
+              <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mt-2">
+                Saved Places
+              </h1>
+            </div>
+          </div>
+        </section>
+        <section className="section-padding bg-cream min-h-[50vh]">
+          <div className="container-custom">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center py-16"
+            >
+              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+                <Heart className="w-10 h-10 text-muted-foreground" />
+              </div>
+              <h2 className="font-display text-2xl font-semibold mb-2">Sign in to view your wishlist</h2>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                Create an account or sign in to save your favorite places and plan your perfect trip
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Link to="/login">
+                  <Button variant="outline" size="lg">Sign In</Button>
+                </Link>
+                <Link to="/signup">
+                  <Button variant="gold" size="lg">
+                    Create Account
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -27,7 +99,7 @@ const Wishlist = () => {
               Saved Places
             </h1>
             <p className="text-primary-foreground/80 mt-4 text-lg">
-              {wishlistItems.length} places saved for your next adventure
+              {items.length} places saved for your next adventure
             </p>
           </div>
         </div>
@@ -35,11 +107,11 @@ const Wishlist = () => {
 
       <section className="section-padding bg-cream min-h-[50vh]">
         <div className="container-custom">
-          {wishlistItems.length > 0 ? (
+          {items.length > 0 ? (
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <AnimatePresence mode="popLayout">
-                  {wishlistItems.map((place, index) => (
+                  {wishlistPlaces.map((place, index) => (
                     <motion.div
                       key={place.id}
                       layout
@@ -56,15 +128,17 @@ const Wishlist = () => {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                         <button
-                          onClick={() => removeFromWishlist(place.id)}
+                          onClick={() => removeFromWishlist(place.place_id)}
                           className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-lg"
                         >
                           <Heart className="w-5 h-5 fill-current" />
                         </button>
                         <div className="absolute bottom-3 left-3 flex gap-2">
-                          <span className="px-3 py-1 bg-gold text-tea-green-dark text-xs font-medium rounded-full">
-                            {place.category}
-                          </span>
+                          {place.category && (
+                            <span className="px-3 py-1 bg-gold text-tea-green-dark text-xs font-medium rounded-full">
+                              {place.category}
+                            </span>
+                          )}
                           {place.rating && (
                             <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-foreground text-xs font-medium rounded-full flex items-center gap-1">
                               <Star className="w-3 h-3 text-gold fill-gold" />
@@ -77,9 +151,11 @@ const Wishlist = () => {
                         <h3 className="font-display text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors">
                           {place.name}
                         </h3>
-                        <p className="text-muted-foreground mt-1 text-sm line-clamp-2">
-                          {place.shortDescription}
-                        </p>
+                        {place.shortDescription && (
+                          <p className="text-muted-foreground mt-1 text-sm line-clamp-2">
+                            {place.shortDescription}
+                          </p>
+                        )}
                         <div className="flex items-center gap-2 mt-3 text-muted-foreground text-xs">
                           <MapPin className="w-3.5 h-3.5" />
                           <span>Assam, India</span>
@@ -92,7 +168,7 @@ const Wishlist = () => {
                           )}
                         </div>
                         <div className="flex gap-2 mt-4">
-                          <Link to={`/places/${place.id}`} className="flex-1">
+                          <Link to={`/places/${place.place_id}`} className="flex-1">
                             <Button variant="gold" size="sm" className="w-full">
                               View Details
                             </Button>
@@ -100,7 +176,7 @@ const Wishlist = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => removeFromWishlist(place.id)}
+                            onClick={() => removeFromWishlist(place.place_id)}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
