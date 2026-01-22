@@ -1,9 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Menu, X, Search, Compass, Heart } from "lucide-react";
+import { Menu, X, Search, Compass, Heart, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { name: "Explore", path: "/places" },
@@ -21,6 +22,13 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, profile, signOut, loading } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,20 +122,46 @@ export function Navbar() {
                 <Heart className="w-5 h-5" />
               </Link>
               <ThemeToggle isScrolled={isScrolled} />
-              <Link to="/login">
-                <Button
-                  variant={isScrolled ? "outline" : "ghost"}
-                  size="sm"
-                  className={!isScrolled ? "text-white border-white/30 hover:bg-white/10" : ""}
-                >
-                  Login
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button variant="gold" size="sm">
-                  Sign Up
-                </Button>
-              </Link>
+              {!loading && (
+                user ? (
+                  <>
+                    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
+                      isScrolled ? "bg-muted" : "bg-white/10"
+                    }`}>
+                      <User className={`w-4 h-4 ${isScrolled ? "text-foreground" : "text-white"}`} />
+                      <span className={`text-sm font-medium ${isScrolled ? "text-foreground" : "text-white"}`}>
+                        {profile?.display_name || "User"}
+                      </span>
+                    </div>
+                    <Button
+                      variant={isScrolled ? "outline" : "ghost"}
+                      size="sm"
+                      onClick={handleSignOut}
+                      className={!isScrolled ? "text-white border-white/30 hover:bg-white/10" : ""}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">
+                      <Button
+                        variant={isScrolled ? "outline" : "ghost"}
+                        size="sm"
+                        className={!isScrolled ? "text-white border-white/30 hover:bg-white/10" : ""}
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                    <Link to="/signup">
+                      <Button variant="gold" size="sm">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  </>
+                )
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -186,12 +220,26 @@ export function Navbar() {
                   </motion.div>
                 ))}
                 <div className="flex gap-3 pt-4 border-t border-border mt-4">
-                  <Link to="/login" className="flex-1">
-                    <Button variant="outline" className="w-full">Login</Button>
-                  </Link>
-                  <Link to="/signup" className="flex-1">
-                    <Button variant="gold" className="w-full">Sign Up</Button>
-                  </Link>
+                  {user ? (
+                    <>
+                      <div className="flex-1 flex items-center gap-2 px-4 py-2 bg-muted rounded-lg">
+                        <User className="w-4 h-4" />
+                        <span className="text-sm font-medium">{profile?.display_name || "User"}</span>
+                      </div>
+                      <Button variant="outline" onClick={handleSignOut}>
+                        <LogOut className="w-4 h-4" />
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/login" className="flex-1">
+                        <Button variant="outline" className="w-full">Login</Button>
+                      </Link>
+                      <Link to="/signup" className="flex-1">
+                        <Button variant="gold" className="w-full">Sign Up</Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>
