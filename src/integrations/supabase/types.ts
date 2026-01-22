@@ -14,16 +14,221 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          check_in_date: string | null
+          check_out_date: string | null
+          created_at: string
+          description: string | null
+          destination: string | null
+          details: Json | null
+          guests: number | null
+          id: string
+          status: Database["public"]["Enums"]["booking_status"]
+          title: string
+          total_price: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_type: Database["public"]["Enums"]["booking_type"]
+          check_in_date?: string | null
+          check_out_date?: string | null
+          created_at?: string
+          description?: string | null
+          destination?: string | null
+          details?: Json | null
+          guests?: number | null
+          id?: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          title: string
+          total_price?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_type?: Database["public"]["Enums"]["booking_type"]
+          check_in_date?: string | null
+          check_out_date?: string | null
+          created_at?: string
+          description?: string | null
+          destination?: string | null
+          details?: Json | null
+          guests?: number | null
+          id?: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          title?: string
+          total_price?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      itineraries: {
+        Row: {
+          created_at: string
+          days: Json
+          end_date: string | null
+          id: string
+          name: string
+          start_date: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days?: Json
+          end_date?: string | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days?: Json
+          end_date?: string | null
+          id?: string
+          name?: string
+          start_date?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          photos: string[] | null
+          place_id: string
+          rating: number
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          photos?: string[] | null
+          place_id: string
+          rating: number
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          photos?: string[] | null
+          place_id?: string
+          rating?: number
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wishlists: {
+        Row: {
+          created_at: string
+          id: string
+          place_category: string | null
+          place_id: string
+          place_image: string | null
+          place_name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          place_category?: string | null
+          place_id: string
+          place_image?: string | null
+          place_name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          place_category?: string | null
+          place_id?: string
+          place_image?: string | null
+          place_name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user" | "researcher"
+      booking_status: "pending" | "confirmed" | "cancelled" | "completed"
+      booking_type: "hotel" | "bus" | "train" | "tour"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +355,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user", "researcher"],
+      booking_status: ["pending", "confirmed", "cancelled", "completed"],
+      booking_type: ["hotel", "bus", "train", "tour"],
+    },
   },
 } as const
