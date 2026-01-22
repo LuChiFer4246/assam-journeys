@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Menu, X, Search, Compass, User, Heart, Map } from "lucide-react";
+import { Menu, X, Search, Compass, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
@@ -112,6 +113,7 @@ export function Navbar() {
               >
                 <Heart className="w-5 h-5" />
               </Link>
+              <ThemeToggle isScrolled={isScrolled} />
               <Link to="/login">
                 <Button
                   variant={isScrolled ? "outline" : "ghost"}
