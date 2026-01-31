@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { MapPin, Star, Heart, Clock, Thermometer } from "lucide-react";
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface PlaceCardProps {
   id: string;
@@ -32,7 +33,15 @@ export function PlaceCard({
   index = 0,
   variant = "default",
 }: PlaceCardProps) {
-  const [isLiked, setIsLiked] = useState(false);
+  const { user } = useAuth();
+  const { items, isInWishlist, toggleWishlist } = useWishlist();
+  const isLiked = isInWishlist(id);
+
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    await toggleWishlist({ id, name, image, category });
+  };
 
   if (variant === "compact") {
     return (
@@ -90,19 +99,18 @@ export function PlaceCard({
           </span>
 
           {/* Wishlist Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setIsLiked(!isLiked);
-            }}
-            className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-sm transition-colors ${
-              isLiked
-                ? "bg-red-500 text-white"
-                : "bg-white/80 text-muted-foreground hover:bg-white hover:text-red-500"
-            }`}
-          >
-            <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
-          </button>
+          {user && (
+            <button
+              onClick={handleWishlistToggle}
+              className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-sm transition-colors ${
+                isLiked
+                  ? "bg-red-500 text-white"
+                  : "bg-white/80 text-muted-foreground hover:bg-white hover:text-red-500"
+              }`}
+            >
+              <Heart className={`w-4 h-4 ${isLiked ? "fill-current" : ""}`} />
+            </button>
+          )}
 
           {/* Weather Badge */}
           {weather && (

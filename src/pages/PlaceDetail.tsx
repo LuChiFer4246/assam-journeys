@@ -125,6 +125,7 @@ const PlaceDetail = () => {
                   <TabsTrigger value="howtoreach" className="rounded-lg">How to Reach</TabsTrigger>
                   <TabsTrigger value="besttime" className="rounded-lg">Best Time</TabsTrigger>
                   <TabsTrigger value="gallery" className="rounded-lg">Gallery</TabsTrigger>
+                  <TabsTrigger value="research" className="rounded-lg">Research</TabsTrigger>
                   <TabsTrigger value="faq" className="rounded-lg">FAQ</TabsTrigger>
                 </TabsList>
 
@@ -292,6 +293,50 @@ const PlaceDetail = () => {
                         </motion.div>
                       ))}
                     </div>
+                  </motion.div>
+                </TabsContent>
+
+                <TabsContent value="research" className="space-y-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                  >
+                    <h2 className="font-display text-2xl font-semibold mb-4">Research & Documentation</h2>
+                    <p className="text-muted-foreground leading-relaxed mb-6">
+                      Access scholarly resources, historical documents, and research materials related to {place.name}.
+                    </p>
+                    <div className="space-y-4">
+                      <div className="p-5 bg-card rounded-xl border border-border flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <FileText className="w-6 h-6 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Historical Documentation</h4>
+                            <p className="text-sm text-muted-foreground">PDF • 2.4 MB</p>
+                          </div>
+                        </div>
+                        <Button variant="outline" size="sm">View</Button>
+                      </div>
+                      <div className="p-5 bg-card rounded-xl border border-border flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                            <FileText className="w-6 h-6 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">Cultural Significance</h4>
+                            <p className="text-sm text-muted-foreground">PDF • 1.8 MB</p>
+                          </div>
+                        </div>
+                        <Button variant="outline" size="sm">View</Button>
+                      </div>
+                    </div>
+                    <Link to="/research" className="inline-block mt-6">
+                      <Button variant="gold">
+                        <FileText className="w-4 h-4" />
+                        View Full Research Library
+                      </Button>
+                    </Link>
                   </motion.div>
                 </TabsContent>
 
