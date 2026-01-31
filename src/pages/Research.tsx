@@ -1,6 +1,8 @@
-import { FileText, Download, BookOpen, GraduationCap } from "lucide-react";
+import { useState } from "react";
+import { FileText, Download, BookOpen, GraduationCap, Search } from "lucide-react";
 import { Layout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const documents = [
   {
@@ -8,34 +10,48 @@ const documents = [
     type: "PDF",
     size: "2.4 MB",
     category: "History",
+    place: "Sivasagar",
   },
   {
     title: "Assamese Folk Traditions",
     type: "PDF",
     size: "1.8 MB",
     category: "Culture",
+    place: "Majuli",
   },
   {
     title: "Wildlife of Kaziranga",
     type: "PDF",
     size: "3.2 MB",
     category: "Wildlife",
+    place: "Kaziranga",
   },
   {
     title: "Ancient Temples of Assam",
     type: "PDF",
     size: "4.1 MB",
     category: "Heritage",
+    place: "Kamakhya",
   },
   {
     title: "Bihu Festival Documentation",
     type: "PDF",
     size: "1.5 MB",
     category: "Festivals",
+    place: "All Assam",
   },
 ];
 
 const Research = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  
+  const filteredDocuments = documents.filter(
+    (doc) =>
+      doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.place.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Layout>
       {/* Header */}
@@ -58,6 +74,17 @@ const Research = () => {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by document title, place name, or category..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+
               <div className="prose max-w-none">
                 <h2 className="font-display text-2xl font-semibold">About This Resource</h2>
                 <p className="text-muted-foreground leading-relaxed">
@@ -68,9 +95,11 @@ const Research = () => {
               </div>
 
               <div>
-                <h3 className="font-display text-xl font-semibold mb-6">Available Documents</h3>
+                <h3 className="font-display text-xl font-semibold mb-6">
+                  Available Documents ({filteredDocuments.length})
+                </h3>
                 <div className="space-y-4">
-                  {documents.map((doc, index) => (
+                  {filteredDocuments.map((doc, index) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-4 bg-card rounded-xl border border-border hover:shadow-md transition-shadow"
@@ -84,18 +113,27 @@ const Research = () => {
                           <p className="text-sm text-muted-foreground">
                             {doc.type} • {doc.size}
                           </p>
+                          <p className="text-xs text-primary">{doc.place}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="px-3 py-1 bg-secondary text-secondary-foreground text-xs rounded-full">
                           {doc.category}
                         </span>
+                        <Button variant="outline" size="sm">
+                          View
+                        </Button>
                         <Button variant="ghost" size="sm">
                           <Download className="w-4 h-4" />
                         </Button>
                       </div>
                     </div>
                   ))}
+                  {filteredDocuments.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      No documents found matching your search.
+                    </div>
+                  )}
                 </div>
               </div>
 
