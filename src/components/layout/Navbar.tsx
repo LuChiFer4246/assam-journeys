@@ -13,8 +13,8 @@ const navLinks = [
   { name: "Culture", path: "/culture" },
   { name: "Stays", path: "/stay" },
   { name: "Travel", path: "/travel" },
+  { name: "Marketplace", path: "/marketplace" },
   { name: "Gallery", path: "/gallery" },
-  { name: "Research", path: "/research" },
 ];
 
 export function Navbar() {
