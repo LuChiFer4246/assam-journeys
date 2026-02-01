@@ -15,7 +15,7 @@ const quickLinks = [
 const exploreLinks = [
   { name: "National Parks", path: "/stay" },
   { name: "Hotels & Stays", path: "/stay" },
-  { name: "Research", path: "/research" },
+  { name: "Local Marketplace", path: "/marketplace" },
   { name: "Map View", path: "/map" },
   { name: "Photo Gallery", path: "/gallery" },
 ];

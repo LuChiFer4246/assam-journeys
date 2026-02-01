@@ -21,6 +21,7 @@ import Research from "./pages/Research";
 import Wishlist from "./pages/Wishlist";
 import Itinerary from "./pages/Itinerary";
 import Gallery from "./pages/Gallery";
+import Marketplace from "./pages/Marketplace";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/itinerary" element={<Itinerary />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/marketplace" element={<Marketplace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
